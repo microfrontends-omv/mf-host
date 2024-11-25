@@ -7,10 +7,18 @@ const deps = require("./package.json").dependencies;
 
 const printCompilationMessage = require('./compilation.config.js');
 
-module.exports = (_, argv) => ({
+module.exports = (_, argv) => {
+  const colorPickerUrl = argv.mode === "development"
+  ? "http://localhost:3001/"
+  : "https://mf-colorpicker-omv.netlify.app/";
+  const colorListUrl = argv.mode === "development"
+  ? "http://localhost:3002/"
+  : "https://mf-colorlist-omv.netlify.app/";
+  return {
   output: {
-    // publicPath: "http://localhost:3000/",
-    publicPath: "https://site-colorpicker-omv.netlify.app/",
+    publicPath: argv.mode === "development"
+    ? "http://localhost:3000/"
+    : "https://site-colorpicker-omv.netlify.app/",
   },
 
   resolve: {
@@ -66,8 +74,8 @@ module.exports = (_, argv) => ({
       name: "host",
       filename: "remoteEntry.js",
       remotes: {
-        colorPicker: "mf_colorpicker@https://mf-colorpicker-omv.netlify.app/remoteEntry.js",
-        colorList: "mf_colorlist@https://mf-colorlist-omv.netlify.app/remoteEntry.js"
+        colorPicker: `mf_colorpicker@${colorPickerUrl}remoteEntry.js`,
+        colorList: `mf_colorlist@${colorListUrl}remoteEntry.js`
       },
       exposes: {},
       shared: {
@@ -87,4 +95,4 @@ module.exports = (_, argv) => ({
     }),
     new Dotenv()
   ],
-});
+}};
